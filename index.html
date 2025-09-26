@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation Example</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0f0f0f;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .container-fluid {
+            height: 100vh;
+        }
+
+        /* Hero Section - Left Side (Bright Blue) */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #8b5cf6 50%, #6366f1 75%, #3b82f6 100%);
+            position: relative;
+            overflow: hidden;
+}
+
+        .hero-section > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #ffffff, #dbeafe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-link {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-link:hover {
+            opacity: 1;
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 300;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #ffffff 0%, #dbeafe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-dots {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 3rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .dot:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .dot.active {
+            background: #ffffff;
+            width: 32px;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Form Section - Right Side (Maroon) */
+        .form-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            z-index: 2;
+            background: rgba(31, 31, 31, 0.85);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .form-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #fecaca 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Modern Input Styling */
+        .modern-input {
+            background: rgba(58, 58, 58, 0.9);
+            border: 1px solid rgba(74, 74, 74, 0.6);
+            border-radius: 12px;
+            color: #ffffff;
+            padding: 14px 18px;
+            font-size: 1rem;
+            transition: all 0.4s ease;
+        }
+
+        .modern-input::placeholder {
+            color: #bbb;
+        }
+
+        .modern-input:focus {
+            background: rgba(64, 64, 64, 0.95);
+            border-color: #f87171;
+            box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.15);
+            color: #ffffff;
+        }
+
+        .modern-input.is-invalid {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+        }
+
+        .modern-input.is-valid {
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+        }
+
+        /* Password Toggle */
+        .position-relative .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #bbb;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Modern Button */
+        .modern-btn {
+            background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 25px rgba(248, 113, 113, 0.3);
+        }
+
+        .modern-btn:hover {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            box-shadow: 0 15px 35px rgba(248, 113, 113, 0.4);
+        }
+
+        /* Form Check Styling */
+        .form-check-input {
+            background-color: rgba(58, 58, 58, 0.9);
+            border-color: rgba(74, 74, 74, 0.6);
+            border-radius: 6px;
+            width: 18px;
+            height: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .form-check-input:checked {
+            background-color: #f87171;
+            border-color: #f87171;
+            box-shadow: 0 2px 10px rgba(248, 113, 113, 0.3);
+        }
+
+        .form-check-input:focus {
+            box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.15);
+        }
+
+        .form-check-label {
+            font-size: 0.95rem;
+            margin-left: 8px;
+        }
+
+        /* Divider */
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(74, 74, 74, 0.6), transparent);
+        }
+
+        .divider span {
+            background: rgba(31, 31, 31, 0.85);
+            padding: 0 1.5rem;
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+
+        /* Social Buttons */
+        .social-btn {
+            background: rgba(58, 58, 58, 0.9);
+            border: 1px solid rgba(74, 74, 74, 0.6);
+            border-radius: 12px;
+            color: #ffffff;
+            padding: 14px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.4s ease;
+        }
+
+        .social-btn:hover {
+            background: rgba(74, 74, 74, 0.9);
+            border-color: rgba(248, 113, 113, 0.5);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Error Messages */
+        .invalid-feedback {
+            display: block;
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            padding-left: 4px;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(31, 31, 31, 0.85);
+            border: 1px solid rgba(55, 65, 81, 0.6);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 991.98px) {
+            .hero-section {
+                min-height: 40vh;
+            }
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .form-section {
+                min-height: 60vh;
+            }
+            .form-container {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .hero-section {
+                min-height: 35vh;
+                padding: 2rem 1rem;
+            }
+            .hero-title {
+                font-size: 2rem;
+            }
+            .form-section {
+                padding: 2rem 1rem;
+            }
+            .form-container {
+                max-width: 100%;
+                padding: 1.5rem;
+                border-radius: 16px;
+            }
+            .logo h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Loading States */
+        .modern-btn:disabled {
+            background: rgba(74, 74, 74, 0.8);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .modern-btn:disabled:hover {
+            background: rgba(74, 74, 74, 0.8);
+            box-shadow: none;
+        }
+
+        /* Focus indicators for accessibility */
+        .modern-input:focus,
+        .modern-btn:focus,
+        .social-btn:focus,
+        .form-check-input:focus {
+            outline: 2px solid #f87171;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid vh-100 p-0">
+        <div class="row h-100 g-0">
+            <!-- Left Side - Hero Section (Bright Blue) -->
+            <div class="col-lg-6 hero-section d-flex flex-column justify-content-between p-5">
+                <div class="hero-header">
+                    <div class="logo mb-4">
+                        <h2 class="text-white fw-bold">FORM</h2>
+                    </div>
+                </div>
+                <div class="hero-content text-center">
+                    <h1 class="hero-title text-white mb-4">Capturing Moments,<br>Creating Memories</h1>
+                    <div class="hero-dots">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot active"></span>
+                    </div>
+                </div>
+                <div></div> <!-- Spacer for flex layout -->
+            </div>
+
+            <!-- Right Side - Form Section (Maroon) -->
+            <div class="col-lg-6 form-section d-flex align-items-center justify-content-center p-5">
+                <div class="w-100" style="max-width: 480px;">
+                    <div class="form-container"></div>
+                    <!-- Success Message (outside form-container) -->
+                    <div id="successMessage" class="success-message">
+                        <div class="text-center">
+                            <div class="success-icon mb-3">✓</div>
+                            <h4 class="text-white mb-3">Welcome!</h4>
+                            <p class="text-white mb-4">Signed in successfully.</p>
+                            <button type="button" class="btn btn-outline-light" id="resetForm">Create Another Account</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
